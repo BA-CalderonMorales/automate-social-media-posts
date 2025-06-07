@@ -50,10 +50,11 @@ impl VideoValidation {
     /// Get validation summary for logging
     pub fn get_summary(&self) -> String {
         format!(
-            "Dimensions: {}, Duration: {}, Size: {}, Playable: {}",
+            "Dimensions: {}, Duration: {}, Size: {}, Audio: {}, Playable: {}",
             if self.correct_dimensions { "✅" } else { "❌" },
             if self.duration_in_range { "✅" } else { "❌" },
             if self.file_size_under_limit { "✅" } else { "❌" },
+            if self.has_audio { "✅" } else { "➖" },
             if self.is_playable { "✅" } else { "❌" }
         )
     }

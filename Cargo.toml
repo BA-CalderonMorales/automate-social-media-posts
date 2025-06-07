@@ -3,6 +3,18 @@ name = "automate-social-media-posts"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "test_template_engine"
+path = "src/bin/test_template_engine.rs"
+
+[[bin]]
+name = "test_text_overlay"
+path = "src/bin/test_text_overlay.rs"
+
+[[bin]]
+name = "test_audio_integration"
+path = "src/bin/test_audio_integration.rs"
+
 [dependencies]
 ffmpeg-next = "7.0"
 tokio = { version = "1.0", features = ["full"] }

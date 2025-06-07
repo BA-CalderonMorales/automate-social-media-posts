@@ -121,6 +121,11 @@ impl VideoGenerator {
         // Create text overlay image first
         let overlay_image = self.create_text_overlay(spec)?;
 
+        // If audio is specified, handle audio-video muxing
+        if let Some(audio_path) = &spec.audio_track {
+            return self.generate_video_with_audio(spec, output_path, &overlay_image, audio_path);
+        }
+
         // Create a solid color video with text overlay
         // Target: 1080x1920 (9:16 aspect ratio), 30fps
 
@@ -196,6 +201,173 @@ impl VideoGenerator {
         }
 
         output.write_trailer()?;
+
+        Ok(())
+    }
+
+    /// Generate video with audio track using FFmpeg muxing
+    fn generate_video_with_audio(
+        &self,
+        spec: &VideoSpec,
+        output_path: &Path,
+        overlay_image: &RgbImage,
+        audio_path: &str,
+    ) -> Result<()> {
+        // First, validate that the audio file exists
+        let audio_file_path = Path::new(audio_path);
+        if !audio_file_path.exists() {
+            // Try relative path from assets
+            let assets_audio_path = Path::new("src/assets/audio").join(audio_path);
+            if !assets_audio_path.exists() {
+                return Err(anyhow::anyhow!(
+                    "Audio file not found: {} (also tried {})",
+                    audio_path,
+                    assets_audio_path.display()
+                ));
+            }
+        }
+
+        // Create temporary video without audio first
+        let temp_video_path = self.temp_dir.join(format!(
+            "{}_temp_video.mp4",
+            spec.title
+                .chars()
+                .filter(|c| c.is_alphanumeric() || *c == '-' || *c == '_')
+                .collect::<String>()
+        ));
+
+        // Generate video-only file
+        self.generate_video_only(spec, &temp_video_path, overlay_image)?;
+
+        // Use FFmpeg to mux video and audio
+        let final_audio_path = if audio_file_path.exists() {
+            audio_file_path.to_path_buf()
+        } else {
+            Path::new("src/assets/audio").join(audio_path)
+        };
+
+        self.mux_video_with_audio(&temp_video_path, &final_audio_path, output_path, spec.duration_seconds)?;
+
+        // Clean up temporary file
+        std::fs::remove_file(&temp_video_path)?;
+
+        Ok(())
+    }
+
+    /// Generate video-only content (for later audio muxing)
+    fn generate_video_only(
+        &self,
+        spec: &VideoSpec,
+        output_path: &Path,
+        overlay_image: &RgbImage,
+    ) -> Result<()> {
+        let mut output = ffmpeg::format::output(&output_path)?;
+        let global_header = output
+            .format()
+            .flags()
+            .contains(ffmpeg::format::flag::Flags::GLOBAL_HEADER);
+
+        // Add video stream
+        let mut video_stream = output.add_stream(ffmpeg::encoder::find(ffmpeg::codec::Id::H264))?;
+        let video_context =
+            ffmpeg::codec::context::Context::from_parameters(video_stream.parameters())?;
+        let mut video_encoder = video_context.encoder().video()?;
+
+        // Configure video encoder
+        video_encoder.set_width(1080);
+        video_encoder.set_height(1920);
+        video_encoder.set_format(ffmpeg::format::Pixel::YUV420P);
+        video_encoder.set_time_base((1, 30)); // 30fps
+        video_encoder.set_frame_rate(Some((30, 1)));
+        video_encoder.set_bit_rate(2_000_000); // 2 Mbps
+        video_encoder.set_max_bit_rate(2_500_000); // 2.5 Mbps max
+        video_encoder.set_gop(30); // GOP size
+        video_encoder.set_qmin(10);
+        video_encoder.set_qmax(51);
+
+        if global_header {
+            video_encoder.set_flags(ffmpeg::codec::flag::Flags::GLOBAL_HEADER);
+        }
+
+        let video_encoder =
+            video_encoder.open_as(ffmpeg::encoder::find(ffmpeg::codec::Id::H264))?;
+        video_stream.set_parameters(&video_encoder);
+
+        // Store time bases before borrowing output mutably
+        let stream_time_base = video_stream.time_base();
+        let encoder_time_base = video_encoder.time_base();
+
+        // Write header
+        output.write_header()?;
+
+        // Generate frames
+        let total_frames = spec.duration_seconds * 30; // 30fps
+        let mut frame = ffmpeg::frame::Video::new(ffmpeg::format::Pixel::YUV420P, 1080, 1920);
+
+        // Convert RGB image to YUV frame data
+        self.fill_frame_with_image(&mut frame, overlay_image)?;
+
+        // Create a new encoder for the actual encoding process
+        let mut encoder = video_encoder;
+
+        for i in 0..total_frames {
+            frame.set_pts(Some(i as i64));
+
+            encoder.send_frame(&frame)?;
+
+            let mut encoded = ffmpeg::packet::Packet::empty();
+            while encoder.receive_packet(&mut encoded).is_ok() {
+                encoded.set_stream(0);
+                encoded.rescale_ts(encoder_time_base, stream_time_base);
+                encoded.write_interleaved(&mut output)?;
+            }
+        }
+
+        // Flush encoder
+        encoder.send_eof()?;
+        let mut encoded = ffmpeg::packet::Packet::empty();
+        while encoder.receive_packet(&mut encoded).is_ok() {
+            encoded.set_stream(0);
+            encoded.rescale_ts(encoder_time_base, stream_time_base);
+            encoded.write_interleaved(&mut output)?;
+        }
+
+        output.write_trailer()?;
+
+        Ok(())
+    }
+
+    /// Mux video and audio using FFmpeg
+    fn mux_video_with_audio(
+        &self,
+        video_path: &Path,
+        audio_path: &Path,
+        output_path: &Path,
+        target_duration: u32,
+    ) -> Result<()> {
+        // Use FFmpeg command-line for reliable audio-video muxing
+        let mut cmd = std::process::Command::new("ffmpeg");
+        cmd.arg("-y") // Overwrite output file
+            .arg("-i").arg(video_path) // Input video
+            .arg("-i").arg(audio_path) // Input audio
+            .arg("-c:v").arg("copy") // Copy video stream (no re-encoding)
+            .arg("-c:a").arg("aac") // Encode audio as AAC
+            .arg("-b:a").arg("128k") // Audio bitrate
+            .arg("-ar").arg("44100") // Audio sample rate
+            .arg("-ac").arg("2") // Stereo audio
+            .arg("-shortest") // End when shortest stream ends
+            .arg("-t").arg(target_duration.to_string()) // Limit to target duration
+            .arg(output_path);
+
+        let output = cmd.output()?;
+
+        if !output.status.success() {
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            return Err(anyhow::anyhow!(
+                "FFmpeg muxing failed: {}",
+                stderr
+            ));
+        }
 
         Ok(())
     }

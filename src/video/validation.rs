@@ -27,7 +27,17 @@ impl VideoValidator {
         let duration_seconds = {
             let duration = video_stream.duration();
             let time_base = video_stream.time_base();
-            (duration as f64 * time_base.numerator() as f64 / time_base.denominator() as f64) as u32
+            if duration > 0 {
+                (duration as f64 * time_base.numerator() as f64 / time_base.denominator() as f64) as u32
+            } else {
+                // If video duration is not reliable, check container duration
+                let container_duration = context.duration();
+                if container_duration > 0 {
+                    (container_duration as f64 / ffmpeg::ffi::AV_TIME_BASE as f64) as u32
+                } else {
+                    0
+                }
+            }
         };
 
         // Allow test videos to be shorter (5+ seconds) but still enforce production range (10-60s)
