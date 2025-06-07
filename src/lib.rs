@@ -1,9 +1,9 @@
-pub mod video;
+pub mod config;
 pub mod content;
 pub mod platforms;
-pub mod config;
+pub mod video;
 
-pub use video::{VideoSpec, VideoTemplate, VideoValidation};
-pub use content::{ContentItem, ContentSelector};
-pub use platforms::{VideoPlatform, VideoMetadata, UploadResult, PlatformError};
 pub use config::Config;
+pub use content::{ContentItem, ContentSelector};
+pub use platforms::{PlatformError, UploadResult, VideoMetadata, VideoPlatform};
+pub use video::{VideoSpec, VideoTemplate, VideoValidation};

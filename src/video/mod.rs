@@ -8,8 +8,8 @@ pub struct VideoSpec {
     pub title: String,
     pub template: VideoTemplate,
     pub duration_seconds: u32,
-    pub background_color: String,    // hex color
-    pub text_color: String,          // hex color  
+    pub background_color: String, // hex color
+    pub text_color: String,       // hex color
     pub font_size: u32,
     pub audio_track: Option<String>, // path to audio file
 }
@@ -32,9 +32,9 @@ pub struct VideoValidation {
 
 impl VideoValidation {
     pub fn is_valid(&self) -> bool {
-        self.correct_dimensions 
-            && self.duration_in_range 
-            && self.file_size_under_limit 
+        self.correct_dimensions
+            && self.duration_in_range
+            && self.file_size_under_limit
             && self.is_playable
     }
 }

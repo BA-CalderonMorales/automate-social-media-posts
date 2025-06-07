@@ -43,7 +43,7 @@ pub trait VideoPlatform {
         video_path: &Path,
         metadata: VideoMetadata,
     ) -> Result<UploadResult, PlatformError>;
-    
+
     fn platform_name(&self) -> &str;
     fn max_file_size(&self) -> u64;
     fn supported_formats(&self) -> Vec<String>;

@@ -1,6 +1,6 @@
+use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
-use chrono::NaiveDate;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ContentItem {
@@ -27,7 +27,7 @@ impl ContentSelector {
             posted_history: HashSet::new(),
         }
     }
-    
+
     // TODO: Implement content selection logic for Phase 1.2
     pub fn select_for_date(&self, _date: NaiveDate, _platform: &str) -> Option<ContentItem> {
         todo!("Content selection logic will be implemented in Phase 1.2")
