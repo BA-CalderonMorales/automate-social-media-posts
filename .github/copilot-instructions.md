@@ -511,3 +511,44 @@ This PRD provides a comprehensive, phased approach to building a reliable video 
 The modular architecture and clear interfaces make this system ideal for AI-assisted development, where each task has well-defined inputs, outputs, and success criteria. The extensive testing strategy ensures quality while the incremental approach allows for course correction as we learn from each phase.
 
 Success depends on disciplined execution of each phase, thorough testing at every step, and maintaining the principle that every component should be independently testable and replaceable.
+
+## Text Formatting Rules
+
+### NO EMOJIS
+- **NEVER use emojis in any code, documentation, comments, or generated text**
+- This includes but is not limited to: 📊 🚀 ✅ ❌ 💡 🔧 📝 🎯 ⚡ 🌟 🎨 📱 💻 🔥 ⭐
+- Use plain text descriptors instead (e.g., "Status" instead of "📊 Status")
+- This applies to README files, CHANGELOG files, commit messages, and all documentation
+
+### Preferred Alternatives
+Instead of emojis, use:
+- **Bold text** for emphasis
+- `Code formatting` for technical terms
+- Clear, descriptive section headers
+- Bullet points for lists
+- Numbered lists for sequences
+
+## Documentation Style
+
+### Section Organization
+- Use `<details><summary>` tags for collapsible sections in Markdown
+- Keep section headers clear and descriptive
+- Maintain consistent formatting throughout files
+- Use proper Markdown hierarchy (h1, h2, h3, etc.)
+
+### Code Comments
+- Write clear, descriptive comments without emojis
+- Use TODO/FIXME/NOTE prefixes for special comments
+- Maintain professional tone in all documentation
+
+## File Naming and Structure
+- Use lowercase with hyphens for file names
+- Keep directory structure logical and organized
+- Maintain consistency with existing patterns
+
+## Commit Messages
+- Use conventional commit format when applicable
+- Write clear, descriptive messages without emojis
+- Focus on the actual changes made
+
+## These instructions should be followed at all times when generating content for this workspace.

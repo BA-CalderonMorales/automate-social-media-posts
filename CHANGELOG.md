@@ -6,9 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+<details>
+<summary>In Development</summary>
+
 ### In Development
 - Task 1.2.1: CSV parser implementation
 - Task 1.2.2: Content selection algorithm
+
+</details>
+
+<details>
+<summary>Completed Today - 2025-06-07</summary>
 
 ### Completed Today - 2025-06-07
 
@@ -31,9 +39,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - FFmpeg CLI integration with `mux_video_with_audio()` method
   - Fixed frame data handling with unsafe code for YUV420P conversion
 
+</details>
+
+<details>
+<summary>Version 0.1.0 - 2025-06-07</summary>
+
 ## [0.1.0] - 2025-06-07
 
 ### Added - Phase 1: Foundation & Local Development
+
+<details>
+<summary>Task 1.1.1: FFmpeg wrapper setup - COMPLETED</summary>
 
 #### Task 1.1.1: FFmpeg wrapper setup - COMPLETED
 - **Initial project structure** with Rust workspace
@@ -47,6 +63,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Frame rate: 30fps
   - Bitrate: 2 Mbps (max 2.5 Mbps)
 
+</details>
+
+<details>
+<summary>Task 1.1.2: Text overlay system - COMPLETED</summary>
+
 #### Task 1.1.2: Text overlay system - COMPLETED
 - **Text rendering engine** using `ab_glyph` and `image` crates
 - **Font support** with embedded DejaVu Sans TTF font
@@ -58,6 +79,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Dynamic text overlay on video frames
 - **Image-to-video conversion** pipeline
 - **Comprehensive testing** with 5 different video configurations
+
+</details>
+
+<details>
+<summary>Task 1.1.3: Template engine - COMPLETED</summary>
 
 #### Task 1.1.3: Template engine - COMPLETED
 - **SimpleText template** fully implemented and operational
@@ -74,6 +100,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Format validation (MP4/H.264)
 - Playability verification
 - Production readiness assessment
+
+</details>
+
+<details>
+<summary>Technical Infrastructure</summary>
 
 ### Technical Infrastructure
 
@@ -119,6 +150,11 @@ src/
     └── mod.rs          # Platform abstraction (placeholder)
 ```
 
+</details>
+
+<details>
+<summary>Performance Metrics</summary>
+
 ### Performance Metrics
 
 #### Video Generation Performance
@@ -127,6 +163,11 @@ src/
 - **Total Test Duration**: 173 seconds for 20 videos
 - **File Size Range**: 111KB - 1.1MB per video
 - **All videos under 50MB limit**: PASS
+
+</details>
+
+<details>
+<summary>Test Coverage</summary>
 
 #### Test Coverage
 - **Font size variations**: 24px to 80px
@@ -146,6 +187,11 @@ src/
 #### Known Issues
 - **Duration metadata**: Minor encoding issue where video duration shows as ~0.004s in metadata instead of specified duration (10-60s). Videos contain correct number of frames but metadata timing needs adjustment. (Note: This was resolved in Task 1.1.4 audio integration)
 
+</details>
+
+<details>
+<summary>Next Steps (PRD Phase 1 Remaining)</summary>
+
 ### Next Steps (PRD Phase 1 Remaining)
 
 #### Task 1.2.1: CSV parser (Next)
@@ -158,7 +204,10 @@ src/
 - [ ] Duplicate prevention system
 - [ ] Platform-specific content selection
 
----
+</details>
+
+<details>
+<summary>Development Notes</summary>
 
 ### Development Notes
 
@@ -178,6 +227,8 @@ src/
 - Trait-based validation system for flexibility
 - Embedded fonts for consistent rendering across environments
 - FFmpeg integration for professional video quality
+
+</details>
 
 ---
 

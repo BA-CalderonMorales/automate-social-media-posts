@@ -2,7 +2,8 @@
 
 An AI-driven system for generating and posting short-form videos to social media platforms automatically. Built with Rust for performance and reliability.
 
-## Project Status
+<details>
+<summary>Project Status</summary>
 
 **Current Phase**: Foundation & Local Development (Phase 1)  
 **Progress**: 60% Complete (3/5 core tasks finished)  
@@ -23,7 +24,10 @@ An AI-driven system for generating and posting short-form videos to social media
 - **Task 1.2.1**: CSV parser for content management
 - **Task 1.2.2**: Content selection algorithm
 
-## Quick Start
+</details>
+
+<details>
+<summary>Quick Start</summary>
 
 ### Prerequisites
 
@@ -59,6 +63,11 @@ cargo run --bin test_text_overlay
 cargo run
 ```
 
+</details>
+
+<details>
+<summary>Current Capabilities</summary>
+
 ## Current Capabilities
 
 ### Video Generation
@@ -81,6 +90,11 @@ cargo run
 - **File Size Limits**: <50MB per video
 - **Format Compliance**: MP4/H.264 verification
 - **Playability Testing**: Automated validation
+
+</details>
+
+<details>
+<summary>Technical Architecture</summary>
 
 ## Technical Architecture
 
@@ -118,6 +132,11 @@ src/
 └── [config, content, platforms]  # Future modules
 ```
 
+</details>
+
+<details>
+<summary>Performance Metrics</summary>
+
 ## Performance Metrics
 
 **Latest Test Results** (20 video generation test):
@@ -126,6 +145,11 @@ src/
 - **File Size Range**: 111KB - 1.1MB
 - **Total Test Duration**: 173 seconds
 
+</details>
+
+<details>
+<summary>Generated Video Examples</summary>
+
 ## Generated Video Examples
 
 The system currently generates videos with:
@@ -133,6 +157,11 @@ The system currently generates videos with:
 - Multiple font sizes and text lengths
 - Different durations (10-60 seconds)
 - Consistent 9:16 aspect ratio for mobile platforms
+
+</details>
+
+<details>
+<summary>Development</summary>
 
 ## Development
 
@@ -162,6 +191,11 @@ pub enum VideoTemplate {
 }
 ```
 
+</details>
+
+<details>
+<summary>Configuration</summary>
+
 ## Configuration
 
 Videos are configured using the `VideoSpec` structure:
@@ -178,6 +212,11 @@ let spec = VideoSpec {
 };
 ```
 
+</details>
+
+<details>
+<summary>Upcoming Features</summary>
+
 ## Upcoming Features
 
 - **Audio Integration**: Background music and sound effects
@@ -186,15 +225,30 @@ let spec = VideoSpec {
 - **Advanced Templates**: Title cards, slideshows, animations
 - **GitHub Actions**: Automated daily posting
 
+</details>
+
+<details>
+<summary>Known Issues</summary>
+
 ## Known Issues
 
 - **Duration Metadata**: Videos contain correct frames but metadata shows ~0.004s instead of specified duration
 - **Audio Support**: Not yet implemented (Task 1.1.4)
 
+</details>
+
+<details>
+<summary>Documentation</summary>
+
 ## Documentation
 
 - [CHANGELOG.md](CHANGELOG.md) - Detailed development history
 - [PRD Documentation] - Comprehensive project requirements (see codebase)
+
+</details>
+
+<details>
+<summary>Contributing</summary>
 
 ## Contributing
 
@@ -203,6 +257,11 @@ This project follows the phased development approach outlined in the PRD:
 1. **Phase 1**: Foundation & Local Development (60% complete)
 2. **Phase 2**: Mock Integration & Testing  
 3. **Phase 3**: Real Platform Integration
+
+</details>
+
+<details>
+<summary>License</summary>
 
 ## License
 
